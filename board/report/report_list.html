@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 제보 게시판</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link href="../css/sub_c.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<div class="wrap">
+
+  <!-- ===== common_list 시작 ===== -->
+  <aside class="left">
+    <ul class="lmenu">
+      <li><a href="report_list.html" class="on">제보 게시판</a></li>
+      <li><a href="fix_list.html">수정 및 신고 게시판</a></li>
+      <li><a href="review_list.html">후기 게시판</a></li>
+      <li><a href="free_list.html">자유 게시판</a></li>
+    </ul>
+    <div class="adbox"><span>AD</span>광고</div>
+  </aside>
+  <!-- ===== common_list 끝 ===== -->
+
+  <!-- ===== 제보 목록 ===== -->
+  <main class="content">
+    <div class="head">
+      <h2>제보 게시판</h2>
+      <form class="search" onsubmit="return false">
+        <select aria-label="검색 조건">
+        	<option>구역</option>
+        	<option>내용</option>
+        </select>
+        <input type="text" aria-label="검색어" placeholder="검색어 입력">
+        <button type="submit" aria-label="검색"></button>
+      </form>
+    </div>
+
+    <div class="tbl">
+      <table>
+        <colgroup>
+          <col width="8%">
+          <col width="34%">
+          <col width="8%">
+          <col width="10%">
+          <col width="14%">
+          <col width="14%">
+          <col width="12%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>구역 이름</th>
+            <th>사진</th>
+            <th>구분</th>
+            <th>작성자</th>
+            <th>등록일</th>
+            <th>처리상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10</td>
+            <td class="t"><a href="report_view.html">유성온천역 3번 출구 앞</a></td>
+            <td><span class="fileIcon" title="사진"></span></td>
+            <td>부스</td>
+            <td>박진호</td>
+            <td>2026-11-11</td>
+            <td><span class="stWait">대기</span></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td class="t"><a href="report_view.html">아산터미널 후문 흡연구역</a></td>
+            <td><span class="fileIcon" title="사진"></span></td>
+            <td>실외</td>
+            <td>회원2</td>
+            <td>2026-11-10</td>
+            <td><span class="stWait">대기</span></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td class="t"><a href="report_view.html">대전 둔산동 공원 옆</a></td>
+            <td></td>
+            <td>실외</td>
+            <td>회원3</td>
+            <td>2026-11-09</td>
+            <td><span class="stOk">승인</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td class="t"><a href="report_view.html">천안역 동부광장</a></td>
+            <td><span class="fileIcon" title="사진"></span></td>
+            <td>실외</td>
+            <td>회원4</td>
+            <td>2026-11-08</td>
+            <td><span class="stOk">승인</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td class="t"><a href="report_view.html">서울시청 인근 흡연부스</a></td>
+            <td><span class="fileIcon" title="사진"></span></td>
+            <td>부스</td>
+            <td>회원5</td>
+            <td>2026-11-07</td>
+            <td><span class="stOk">승인</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td class="t"><a href="report_view.html">세종 정부청사 후문</a></td>
+            <td></td>
+            <td>실외</td>
+            <td>회원6</td>
+            <td>2026-11-06</td>
+            <td><span class="stNo">반려</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td class="t"><a href="report_view.html">대전역 서광장 흡연구역</a></td>
+            <td><span class="fileIcon" title="사진"></span></td>
+            <td>실외</td>
+            <td>회원7</td>
+            <td>2026-11-05</td>
+            <td><span class="stOk">승인</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td class="t"><a href="report_view.html">카이스트 정문 옆 흡연구역</a></td>
+            <td></td>
+            <td>실외</td>
+            <td>회원8</td>
+            <td>2026-11-04</td>
+            <td><span class="stOk">승인</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="t"><a href="report_view.html">유성 버스터미널 1층</a></td>
+            <td></td>
+            <td>실내</td>
+            <td>회원9</td>
+            <td>2026-11-03</td>
+            <td><span class="stNo">반려</span></td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td class="t"><a href="report_view.html">갤러리아 타임월드 옥상</a></td>
+            <td><span class="fileIcon" title="사진"></span></td>
+            <td>실내</td>
+            <td>회원10</td>
+            <td>2026-11-02</td>
+            <td><span class="stOk">승인</span></td>
+          </tr>
+          <!-- 제보가 하나도 없을 때: 7칸을 합쳐서 한 줄로
+          <tr>
+            <td colspan="7">등록된 제보가 없습니다.</td>
+          </tr>
+          -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이징 + 제보하기 버튼 -->
+    <div class="pagebar">
+      <span class="pb-l"></span>
+      <nav class="paging" aria-label="페이지">
+        <a href="#">&laquo;</a>
+        <a href="#" class="on">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">4</a>
+        <a href="#">5</a>
+        <a href="#">&raquo;</a>
+      </nav>
+      <div class="pb-r">
+        <a href="report_write.html" class="btnWrite">제보하기</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link href="css/main_c.css" rel="stylesheet">
+<script>
+
+</script>
+</head>
+<body>
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<header>
+  <div class="top">
+    <a href="index.html" class="logo">흡연구역 MAP</a>
+    <div class="user">
+      <!-- 로그인 전 -->
+      <a href="member/member_login.html">Login</a><a href="member/member_join.html">회원가입</a>
+      <!-- 로그인 후 (JSTL c:if 로 전환)
+      <span class="hello">박진호님</span><a href="#">Logout</a><a href="member/member_mypage.html">마이페이지</a>
+       -->
+    </div>
+  </div>
+  <nav class="gnb" aria-label="주 메뉴">
+    <ul>
+      <li><a href="notice/notice_list.html">Notice / News</a></li>
+      <li><a href="board/report_list.html">게시판</a>
+        <ul class="sub">
+          <li><a href="board/report_list.html">제보 게시판</a></li>
+          <li><a href="#">수정 및 신고 게시판</a></li>
+          <li><a href="#">후기 게시판</a></li>
+          <li><a href="#">자유 게시판</a></li>
+        </ul>
+      </li>
+      <li><a href="#">이벤트</a>
+        <ul class="sub">
+          <li><a href="#">진행 중</a></li>
+          <li><a href="#">종료</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Q&amp;A</a></li>
+      <li><a href="#">AD</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="main">
+  <aside class="side">
+    <form class="search" onsubmit="return false">
+      <label for="area">지역</label>
+      <input id="area" type="text" placeholder="시·군·구 또는 장소 검색">
+      <button type="submit" aria-label="검색"></button>
+    </form>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="정렬">
+        <button type="button" data-sort="dist" aria-pressed="true">거리순</button>
+        <button type="button" data-sort="rate" aria-pressed="false">평점순</button>
+      </div>
+      <button type="button" class="favBtn" id="favFilter" aria-pressed="false">&#9733; 즐겨찾기</button>
+    </div>
+
+    <!-- 아래 항목은 임시 데이터 → JSP 에서 c:forEach 로 반복 -->
+	<ul class="list" id="list">
+	  <li class="item" data-id="Z001" data-dist="0.4" data-rate="9.2">
+	    <button class="star" aria-pressed="true" aria-label="즐겨찾기">&#9733;</button>
+	    <div>
+	      <h3><a href="zone/zone_view.html">대전광역시 유성구</a></h3>
+	      <p class="addr">유성온천역 3번 출구 앞</p>
+	      <p class="meta"><span class="dist"></span><span>평점 <b>9.2</b></span><span>후기 24</span></p>
+	      <p class="review">후기: 부스라 비 와도 괜찮아요</p>
+	    </div>
+	    <a href="zone/zone_view.html" class="thumb">사진</a>
+	  </li>
+      <li class="item" data-id="Z002" data-dist="2.1" data-rate="8.1">
+        <button class="star" aria-pressed="false" aria-label="즐겨찾기">&#9733;</button>
+        <div>
+          <h3><a href="zone/zone_view.html">충청남도 아산시</a></h3>
+          <p class="addr">아산터미널 후문</p>
+          <p class="meta"><span class="dist"></span><span>평점 <b>8.1</b></span><span>후기 7</span></p>
+          <p class="review">후기: 자리가 좁은 편이에요</p>
+        </div>
+        <a href="zone/zone_view.html" class="thumb">사진</a>
+      </li>
+      <li class="item" data-id="Z003" data-dist="5.6" data-rate="9.8">
+        <button class="star" aria-pressed="true" aria-label="즐겨찾기">&#9733;</button>
+        <div><h3><a href="zone/zone_view.html">서울특별시 중구</a></h3>
+          <p class="addr">시청역 인근 흡연구역</p>
+          <p class="meta"><span class="dist"></span><span>평점 <b>9.8</b></span><span>후기 51</span></p>
+          <p class="review">후기: 의자도 있고 깨끗해요</p>
+        </div>
+        <a href="zone/zone_view.html" class="thumb">사진</a>
+      </li>
+      <li class="item" data-id="Z004" data-dist="8.3" data-rate="7.4">
+        <button class="star" aria-pressed="false" aria-label="즐겨찾기">&#9733;</button>
+        <div><h3><a href="zone/zone_view.html">대전광역시 서구</a></h3>
+          <p class="addr">둔산동 공원 옆</p>
+          <p class="meta"><span class="dist"></span><span>평점 <b>7.4</b></span><span>후기 12</span></p>
+          <p class="review">후기: 밤에는 조금 어두워요</p>
+        </div>
+        <a href="zone/zone_view.html" class="thumb">사진</a>
+      </li>
+      <li class="item" data-id="Z005" data-dist="12.0" data-rate="8.8">
+        <button class="star" aria-pressed="false" aria-label="즐겨찾기">&#9733;</button>
+        <div><h3><a href="zone/zone_view.html">충청남도 천안시</a></h3>
+          <p class="addr">천안역 동부광장</p>
+          <p class="meta"><span class="dist"></span><span>평점 <b>8.8</b></span><span>후기 33</span></p>
+          <p class="review">후기: 접근성이 좋아요</p>
+        </div>
+        <a href="zone/zone_view.html" class="thumb">사진</a>
+      </li>
+	  <li class="noItem" id="noItem">조건에 맞는 구역이 없습니다.</li>
+    </ul>
+
+    <!-- 광고칸: 이미지가 넘어가면서 계속 돌아가는 형태 -->
+	<div class="ad" aria-label="광고">
+	  <span class="tag">AD</span>
+	  <a href="ad_view.html" class="slide on"><img src="img/ad1.jpg" alt="신상 담배 광고"></a>
+	  <a href="ad_view.html" class="slide"><img src="img/ad2.jpg" alt="신상 전자담배 광고"></a>
+	  <a href="ad_view.html" class="slide"><img src="img/ad3.jpg" alt="신상 전자담배 광고"></a>
+	  <a href="ad_view.html" class="slide"><img src="img/ad4.jpg" alt="광고 문의"></a>
+	</div>        
+	</aside>      
+
+  <!-- ===== 지도 ===== -->
+  <section class="mapWrap" aria-label="흡연구역 지도">
+ 	<div id="map">
+ 		<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9b517f1cfb5f226389af659b2884ba65&libraries=services,clusterer"></script>
+		<script>
+		(function(){
+			var list = document.getElementById('list');
+			var sortBtns = document.querySelectorAll('[data-sort]');
+			var favBtn = document.getElementById('favFilter');
+			var areaInput = document.getElementById('area');
+			var keyword = '';   // 지역 검색어
+			
+			// 내 위치에 빨간 점 표시 (처음엔 만들고, 다음부터는 위치만 옮김)
+			var myDot = null;
+			function showMyDot(lat, lng){
+				if(!map) return;
+				var pos = new kakao.maps.LatLng(lat, lng);
+				if(!myDot){
+					myDot = new kakao.maps.CustomOverlay({
+						position: pos,
+						content: '<div class="myDot"></div>',
+						xAnchor: 0.5,
+						yAnchor: 0.5,
+						zIndex: 5
+					});
+					myDot.setMap(map);
+				}else{
+					myDot.setPosition(pos);
+				}
+			}
+			// 임시 데이터 : 리스트 카드의 data-id 와 id 가 같아야 서로 연결됨 (나중에 DB 값으로 교체)
+			var zones = [
+				{id:'Z001', name:'유성온천역', lat:36.3547, lng:127.3445},
+				{id:'Z002', name:'아산터미널', lat:36.7898, lng:127.0020},
+				{id:'Z003', name:'서울시청 인근', lat:37.5663, lng:126.9779},
+				{id:'Z004', name:'대전 둔산동', lat:36.3517, lng:127.3785},
+				{id:'Z005', name:'천안역', lat:36.8097, lng:127.1491}
+			];
+			function zoneById(id){
+				for(var i = 0; i < zones.length; i++){
+					if(zones[i].id === id) return zones[i];
+				}
+				return null;
+			}
+		
+			// ===== 지도 =====
+			var box = document.getElementById('map');
+			var map = null, geocoder = null, places = null;
+			var markers = {}, infos = {}, openInfo = null;
+		
+			if(window.kakao && kakao.maps){
+				map = new kakao.maps.Map(box, {center: new kakao.maps.LatLng(36.5, 127.3), level: 12});
+				geocoder = new kakao.maps.services.Geocoder();
+				places = new kakao.maps.services.Places();
+		
+				zones.forEach(function(z){
+					var pos = new kakao.maps.LatLng(z.lat, z.lng);
+					var marker = new kakao.maps.Marker({map: map, position: pos, title: z.name});
+					var info = new kakao.maps.InfoWindow({
+						content: '<div style="padding:8px 12px;font-size:13px;line-height:1.6;white-space:nowrap">'
+							+ '<b>' + z.name + '</b><br>'
+							+ '<a href="zone_view.html">상세보기</a></div>',
+						removable: true
+					});
+					markers[z.id] = marker;
+					infos[z.id] = info;
+					// 마커를 누르면 말풍선이 열리고 리스트의 해당 카드가 선택됨
+					kakao.maps.event.addListener(marker, 'click', function(){
+						showZone(z.id, false);
+					});
+				});
+			}else{
+				box.innerHTML = '<p style="padding:20px;color:#666">지도를 불러오지 못했습니다. JavaScript 키와 등록한 도메인을 확인하세요.</p>';
+			}
+		
+			// 구역 표시 : 말풍선 열기 + 리스트 카드 선택 (moveMap 이 true면 지도도 그 위치로 이동)
+			function showZone(id, moveMap){
+				if(!map || !markers[id]) return;
+				if(openInfo) openInfo.close();
+				infos[id].open(map, markers[id]);
+				openInfo = infos[id];
+				if(moveMap){
+					map.setLevel(4);
+					map.panTo(markers[id].getPosition());
+				}
+		
+				var on = list.querySelector('.item.sel');
+				if(on) on.classList.remove('sel');
+				var li = list.querySelector('.item[data-id="' + id + '"]');
+				if(li){
+					li.classList.add('sel');
+					if(!moveMap) li.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+				}
+			}
+		
+			// 리스트에 없는 지역은 지도에서 주소/장소로 검색해서 이동
+			function moveBySearch(q){
+				geocoder.addressSearch(q, function(r, s){
+					if(s === kakao.maps.services.Status.OK){
+						map.setLevel(6);
+						map.panTo(new kakao.maps.LatLng(r[0].y, r[0].x));
+					}else{
+						places.keywordSearch(q, function(r2, s2){
+							if(s2 === kakao.maps.services.Status.OK){
+								map.setLevel(5);
+								map.panTo(new kakao.maps.LatLng(r2[0].y, r2[0].x));
+							}else{
+								alert('검색 결과가 없습니다.');
+							}
+						});
+					}
+				});
+			}
+		
+			// 확대 / 축소 / 내 위치 버튼
+			document.addEventListener('click', function(e){
+				var b = e.target.closest('button[aria-label]');
+				if(!b || !map) return;
+				var t = b.getAttribute('aria-label');
+				if(t === '확대') map.setLevel(map.getLevel() - 1);
+				else if(t === '축소') map.setLevel(map.getLevel() + 1);
+				else if(t === '내 위치' && navigator.geolocation){
+					navigator.geolocation.getCurrentPosition(function(p){
+						map.setLevel(4);
+						map.setCenter(new kakao.maps.LatLng(p.coords.latitude, p.coords.longitude));
+						showMyDot(p.coords.latitude, p.coords.longitude);   // 빨간 점 표시
+					}, function(){
+						// 위치를 못 가져오면 아무것도 하지 않음
+					}, {
+						enableHighAccuracy: true,
+						timeout: 10000,
+						maximumAge: 0
+					});
+				}
+			});
+		
+			// ===== 리스트 : 정렬 / 즐겨찾기 / 검색어 =====
+			function render(){
+				var key = document.querySelector('[data-sort][aria-pressed="true"]').dataset.sort;
+				var onlyFav = favBtn.getAttribute('aria-pressed') === 'true';
+				var items = [].slice.call(list.querySelectorAll('.item'));
+				items.sort(function(a, b){
+					return key === 'dist' ? a.dataset.dist - b.dataset.dist : b.dataset.rate - a.dataset.rate;
+				});
+		
+				var shown = 0;
+				items.forEach(function(li){
+					var fav = li.querySelector('.star').getAttribute('aria-pressed') === 'true';
+					var match = keyword === '' || li.textContent.indexOf(keyword) > -1;
+					var show = (!onlyFav || fav) && match;
+					li.style.display = show ? '' : 'none';
+					if(show) shown++;
+					list.appendChild(li);
+				});
+		
+				var no = document.getElementById('noItem');
+				no.style.display = shown === 0 ? 'block' : 'none';
+				list.appendChild(no);
+			}
+		
+			sortBtns.forEach(function(b){
+				b.addEventListener('click', function(){
+					sortBtns.forEach(function(x){ x.setAttribute('aria-pressed', x === b); });
+					render();
+				});
+			});
+			favBtn.addEventListener('click', function(){
+				favBtn.setAttribute('aria-pressed', favBtn.getAttribute('aria-pressed') !== 'true');
+				render();
+			});
+		
+			// 카드 안에서 누른 곳에 따라: 별 = 즐겨찾기, 제목/사진 = 상세 화면 이동, 나머지 = 지도 이동
+			list.addEventListener('click', function(e){
+				var s = e.target.closest('.star');
+				if(s){
+					s.setAttribute('aria-pressed', s.getAttribute('aria-pressed') !== 'true');
+					render();
+					return;
+				}
+				if(e.target.closest('a')) return;
+				var li = e.target.closest('.item');
+				if(li) showZone(li.dataset.id, true);
+			});
+		
+			// 지역 검색 : 이름/주소에 검색어가 들어간 구역만 남기고, 첫 구역으로 지도 이동
+			areaInput.form.addEventListener('submit', function(e){
+				e.preventDefault();
+				keyword = areaInput.value.trim();
+				render();
+				if(keyword === '' || !map) return;
+		
+				var items = list.querySelectorAll('.item');
+				for(var i = 0; i < items.length; i++){
+					if(items[i].style.display !== 'none'){
+						showZone(items[i].dataset.id, true);
+						return;
+					}
+				}
+				moveBySearch(keyword);
+			});
+		
+			// ===== 거리 : 내 위치 기준으로 거리(km) 계산 =====
+			function calcDist(lat1, lng1, lat2, lng2){
+				var R = 6371, rad = Math.PI / 180;
+				var dLat = (lat2 - lat1) * rad, dLng = (lng2 - lng1) * rad;
+				var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+					+ Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+				return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			}
+			function setMyPos(lat, lng){
+				list.querySelectorAll('.item').forEach(function(li){
+					var z = zoneById(li.dataset.id);
+					if(!z) return;
+					var d = calcDist(lat, lng, z.lat, z.lng);
+					li.dataset.dist = d.toFixed(1);
+					li.querySelector('.dist').textContent = d.toFixed(1) + 'km';
+				});
+				render();
+			}
+				if(navigator.geolocation){
+					navigator.geolocation.getCurrentPosition(function(p){
+						setMyPos(p.coords.latitude, p.coords.longitude);   // 거리 계산
+						if(map){
+							map.setCenter(new kakao.maps.LatLng(p.coords.latitude, p.coords.longitude));   // 지도를 내 위치로
+							map.setLevel(5);
+							showMyDot(p.coords.latitude, p.coords.longitude);   // 빨간 점 표시
+						}
+					}, function(){
+						// 위치를 못 가져오면 아무것도 하지 않음
+					}, {
+						enableHighAccuracy: true,
+						timeout: 10000,
+						maximumAge: 0
+					});
+				}
+		
+			render();
+		
+			// ===== 광고칸 : 이미지가 자동으로 넘어감 =====
+			var slides = document.querySelectorAll('.slide'), n = 0;
+			setInterval(function(){
+				slides[n].classList.remove('on');
+				n = (n + 1) % slides.length;
+				slides[n].classList.add('on');
+			}, 3500);
+		})();
+		</script>
+ 	</div>
+    <div class="ctrl">
+      <button type="button" aria-label="내 위치">&#9678;</button>
+      <div class="zoom">
+        <button type="button" aria-label="확대">+</button>
+        <button type="button" aria-label="축소">&minus;</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <strong>JSL 인재개발원 AI 1기 박진호</strong><br>
+  TEL 010-0000-0000
+</footer>
+
+</body>
+</html>

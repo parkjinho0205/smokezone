@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 제보 확인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link href="../css/sub_c.css" rel="stylesheet">
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9b517f1cfb5f226389af659b2884ba65"></script>
+<script src="../js/common.js"></script>
+<script>
+	// 지도: 제보된 위치에 마커 하나 표시 (보기만 가능)
+	window.onload = function(){
+		var box = document.getElementById("viewMap");
+		if(window.kakao && kakao.maps){
+			var pos = new kakao.maps.LatLng(36.7898, 127.0020);
+			var map = new kakao.maps.Map(box, {center: pos, level: 3});
+			new kakao.maps.Marker({map: map, position: pos});
+		}else{
+			box.innerHTML = "<p style='padding:20px;color:#666'>지도를 불러오지 못했습니다</p>";
+		}
+	}
+
+	// 관리자 처리: 승인
+	function goApprove(){
+		if(confirm("이 제보를 승인하시겠습니까?\n승인하면 지도에 반영됩니다.")){
+			// DB 연동할 때 승인 요청 처리
+			alert("승인 (DB 연동 전 화면 확인용)");
+		}
+	}
+
+	// 관리자 처리: 반려 (사유 필수)
+	function goReject(){
+		if(isEmpty(proc.t_reject, "반려 사유를 입력하세요."))return;
+		if(confirm("이 제보를 반려하시겠습니까?")){
+			// DB 연동할 때 반려 요청 처리
+			alert("반려 (DB 연동 전 화면 확인용)");
+		}
+	}
+
+	function goUpdate(){
+		location.href = "report_update.html";
+	}
+	function goDelete(){
+		if(confirm("정말 삭제 하시나요?")){
+			// DB 연동할 때 삭제 요청 처리
+			alert("삭제 (DB 연동 전 화면 확인용)");
+			location.href = "report_list.html";
+		}
+	}
+</script>
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<div class="wrap">
+
+  <!-- ===== common_list 시작 ===== -->
+  <aside class="left">
+    <ul class="lmenu">
+      <li><a href="report_list.html" class="on">제보 게시판</a></li>
+      <li><a href="fix_list.html">수정 및 신고 게시판</a></li>
+      <li><a href="review_list.html">후기 게시판</a></li>
+      <li><a href="free_list.html">자유 게시판</a></li>
+    </ul>
+    <div class="adbox"><span>AD</span>광고</div>
+  </aside>
+  <!-- ===== common_list 끝 ===== -->
+
+  <!-- ===== 제보 확인 ===== -->
+  <main class="content">
+    <div class="head">
+      <h2>제보 게시판</h2>
+    </div>
+
+    <table class="writeForm">
+      <colgroup>
+        <col width="15%">
+        <col width="45%">
+        <col width="15%">
+        <col width="25%">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th>구역 이름</th>
+          <td colspan="3">아산터미널 후문 흡연구역</td>
+        </tr>
+        <tr>
+          <th>작성자</th>
+          <td>박진호</td>
+          <th>작성일</th>
+          <td>2026-11-10 18:20</td>
+        </tr>
+        <tr>
+          <th>구분</th>
+          <td>실외</td>
+          <th>처리상태</th>
+          <td>
+            <span class="stWait">대기</span>
+            <!-- 처리 결과에 따라 아래 중 하나로 교체
+            <span class="stOk">승인</span>
+            <span class="stNo">반려</span>
+            -->
+          </td>
+        </tr>
+
+        <!-- 반려된 제보일 때만 이 줄을 추가
+        <tr>
+          <th>반려 사유</th>
+          <td colspan="3">이미 등록된 흡연구역과 위치가 같습니다.</td>
+        </tr>
+        -->
+
+        <tr>
+          <th>주소</th>
+          <td colspan="3">충청남도 아산시 (샘플 주소)</td>
+        </tr>
+        <tr>
+          <th>위치</th>
+          <td colspan="3">
+            <div id="viewMap" class="pickMap"></div>
+          </td>
+        </tr>
+        <tr>
+          <th>설명</th>
+          <td colspan="3">
+            <div class="viewContent short">아산터미널 후문 쪽 주차장 옆에 있는 흡연구역입니다.
+지붕이 있고 재떨이가 두 개 놓여 있어요. 밤에는 조금 어둡습니다.</div>
+          </td>
+        </tr>
+        <tr>
+          <th>사진</th>
+          <td colspan="3">
+            <div class="photoRow">
+              <div>사진 1</div>
+              <div>사진 2</div>
+              <div>사진 3</div>
+            </div>
+            <!-- 사진이 없을 때는 위 div 대신 아래 문구 사용
+            첨부된 사진이 없습니다.
+            -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 관리자 처리 -->
+    <form name="proc">
+      <div class="adminBox">
+        <p class="ttl">관리자 처리</p>
+        <div class="adminRow">
+          <input type="text" name="t_reject" class="inTitle" maxlength="100" placeholder="반려 사유 (반려할 때만 입력)">
+          <a href="javascript:goReject()" class="btnCancel">반려</a>
+          <a href="javascript:goApprove()" class="btnSave">승인</a>
+        </div>
+      </div>
+    </form>
+
+    <!-- 이전글 | 수정 삭제 목록 | 다음글 (한 줄) -->
+    <div class="viewBar">
+      <div class="pnPrev">
+        <span class="pnLabel">이전글</span><a href="report_view.html" class="pnLink">대전 둔산동 공원 옆</a>
+        <!-- 이전글이 없을 때: <span class="pnLabel">이전글</span><span class="pnNone">이전 글이 없습니다.</span> -->
+      </div>
+
+      <div class="writeBtns">
+        <a href="javascript:goUpdate()" class="btnSave">수정</a>
+        <a href="javascript:goDelete()" class="btnCancel">삭제</a>
+        <a href="report_list.html" class="btnCancel">목록</a>
+      </div>
+
+        <!-- 후 -->
+	  <div class="pnNext">
+	    <a href="report_view.html" class="pnLink">report 샘플 글 제목 11</a><span class="pnLabel">다음글</span>
+	    <!-- 다음글이 없을 때: <span class="pnNone">다음 글이 없습니다.</span><span class="pnLabel">다음글</span> -->
+	  </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+</body>
+</html>

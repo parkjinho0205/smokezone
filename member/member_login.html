@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 로그인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../css/member_c.css">
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<main class="center">
+  <section class="card">
+    <h2>로그인</h2>
+    <form name="login" onsubmit="return goLogin()">
+      <div class="field">
+        <label for="t_id">아이디</label>
+        <input type="text" id="t_id" name="t_id" autocomplete="username" placeholder="아이디 입력">
+      </div>
+      <div class="field">
+        <label for="t_pw">비밀번호</label>
+        <input type="password" id="t_pw" name="t_pw" autocomplete="current-password" placeholder="비밀번호 입력">
+      </div>
+      <label class="keep"><input type="checkbox" name="t_save"> 아이디 저장</label>
+      <p class="err" id="err" role="alert"></p>
+      <button type="submit" class="btn">로그인</button>
+    </form>
+    <div class="links">
+      <a href="join.html">회원가입</a><span>|</span><a href="#">아이디 / 비밀번호 찾기</a>
+    </div>
+  </section>
+</main>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+<script>
+function goLogin(){
+  var f=document.login, err=document.getElementById('err');
+  if(!f.t_id.value.trim()){ err.textContent='아이디를 입력하세요.'; f.t_id.focus(); return false; }
+  if(!f.t_pw.value){ err.textContent='비밀번호를 입력하세요.'; f.t_pw.focus(); return false; }
+  err.textContent='';
+  // 화면 구현 단계: 실제 연동 시 아래 3줄 사용
+  // f.method="post"; f.action="Member?t_gubun=login"; f.submit();
+  alert('로그인 요청 (DB 연동 전 화면 확인용)');
+  return false;
+}
+</script>
+</body>
+</html>

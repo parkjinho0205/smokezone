@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 마이페이지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../css/member_c.css">
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<div class="wrap">
+
+  <!-- 마이페이지 왼쪽 메뉴 -->
+  <aside class="left">
+    <ul class="lmenu">
+      <li><a href="#info">내 정보</a></li>
+      <li><a href="#pw">비밀번호 변경</a></li>
+      <li><a href="#fav">즐겨찾기</a></li>
+      <li><a href="#post">내가 쓴 글</a></li>
+      <li><a href="#review">내가 쓴 후기</a></li>
+      <li><a href="#leave">회원 탈퇴</a></li>
+    </ul>
+  </aside>
+
+  <main class="mp">
+
+    <!-- 내 정보 -->
+    <section class="panel" id="p-info">
+      <h2>내 정보</h2>
+      <p class="desc">아이디와 가입일은 변경할 수 없습니다.</p>
+      <form name="info" onsubmit="return goInfo()" novalidate>
+        <div class="field"><label for="i_id">아이디</label><input type="text" id="i_id" value="smoker01" readonly></div>
+        <div class="field"><label for="i_name">이름</label><input type="text" id="i_name" name="t_name" value="박진호" maxlength="20"></div>
+        <div class="field"><label for="i_email">이메일</label><input type="email" id="i_email" name="t_email" value="example@email.com"></div>
+        <div class="field"><label for="i_tel">휴대폰 번호</label><input type="tel" id="i_tel" name="t_tel" value="010-0000-0000" maxlength="13"></div>
+        <div class="field"><label for="i_date">가입일</label><input type="text" id="i_date" value="2026-11-11" readonly></div>
+        <p class="msg" id="msgInfo"></p>
+        <button type="submit" class="btn sm">저장</button>
+      </form>
+    </section>
+
+    <!-- 비밀번호 변경 -->
+    <section class="panel" id="p-pw">
+      <h2>비밀번호 변경</h2>
+      <p class="desc">현재 비밀번호를 확인한 뒤 새 비밀번호로 바꿉니다.</p>
+      <form name="pw" onsubmit="return goPw()" novalidate>
+        <div class="field"><label for="p_now">현재 비밀번호</label><input type="password" id="p_now" name="t_pw_now" autocomplete="current-password"></div>
+        <div class="field"><label for="p_new">새 비밀번호</label><input type="password" id="p_new" name="t_pw_new" maxlength="20" autocomplete="new-password" placeholder="영문+숫자 포함 8~20자"></div>
+        <div class="field"><label for="p_new2">새 비밀번호 확인</label><input type="password" id="p_new2" name="t_pw_new2" maxlength="20" autocomplete="new-password"></div>
+        <p class="msg" id="msgPw"></p>
+        <button type="submit" class="btn sm">변경하기</button>
+      </form>
+    </section>
+
+    <!-- 즐겨찾기 -->
+    <section class="panel" id="p-fav">
+      <h2>즐겨찾기</h2>
+      <p class="desc">별표(★)로 저장해 둔 흡연구역입니다.</p>
+      <ul class="mlist">
+        <li><span class="star">&#9733;</span>
+          <div class="info"><b>대전광역시 유성구</b><span>유성온천역 3번 출구 앞</span></div>
+          <span class="rate">9.2</span><button class="mini" data-del="즐겨찾기를">해제</button></li>
+        <li><span class="star">&#9733;</span>
+          <div class="info"><b>서울특별시 중구</b><span>시청역 인근 흡연구역</span></div>
+          <span class="rate">9.8</span><button class="mini" data-del="즐겨찾기를">해제</button></li>
+        <li><span class="star">&#9733;</span>
+          <div class="info"><b>충청남도 천안시</b><span>천안역 동부광장</span></div>
+          <span class="rate">8.8</span><button class="mini" data-del="즐겨찾기를">해제</button></li>
+      </ul>
+    </section>
+
+    <!-- 내가 쓴 글 -->
+    <section class="panel" id="p-post">
+      <h2>내가 쓴 글</h2>
+      <p class="desc">제보, 신고, 자유게시판, Q&amp;A에 작성한 글입니다.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th style="width:70px">번호</th><th style="width:130px">게시판</th><th>제목</th><th style="width:110px">등록일</th><th style="width:80px">조회수</th></tr></thead>
+          <tbody>
+            <tr><td>5</td><td>제보</td><td class="t"><a href="#">정문 옆 흡연부스 제보합니다</a></td><td>2026-11-10</td><td>14</td></tr>
+            <tr><td>4</td><td>자유</td><td class="t"><a href="#">요즘 날씨에 야외 구역 어떠세요?</a></td><td>2026-11-08</td><td>32</td></tr>
+            <tr><td>3</td><td>수정 및 신고</td><td class="t"><a href="#">위치가 실제와 달라요</a></td><td>2026-11-05</td><td>9</td></tr>
+            <tr><td>2</td><td>Q&amp;A</td><td class="t"><a href="#">제보는 얼마나 걸려서 반영되나요?</a></td><td>2026-11-02</td><td>21</td></tr>
+            <tr><td>1</td><td>자유</td><td class="t"><a href="#">가입 인사드립니다</a></td><td>2026-11-01</td><td>18</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 내가 쓴 후기 -->
+    <section class="panel" id="p-review">
+      <h2>내가 쓴 후기</h2>
+      <p class="desc">흡연구역에 남긴 평점과 후기입니다.</p>
+      <ul class="mlist">
+        <li><div class="info"><b>대전광역시 유성구 · 유성온천역 3번 출구 앞</b><span>부스라 비 와도 괜찮아요 · 2026-11-09</span></div>
+          <span class="rate">&#9733; 5</span><button class="mini" data-del="후기를">삭제</button></li>
+        <li><div class="info"><b>서울특별시 중구 · 시청역 인근</b><span>의자도 있고 깨끗해요 · 2026-11-06</span></div>
+          <span class="rate">&#9733; 5</span><button class="mini" data-del="후기를">삭제</button></li>
+        <li><div class="info"><b>대전광역시 서구 · 둔산동 공원 옆</b><span>밤에는 조금 어두워요 · 2026-11-03</span></div>
+          <span class="rate">&#9733; 3</span><button class="mini" data-del="후기를">삭제</button></li>
+      </ul>
+    </section>
+
+    <!-- 회원 탈퇴 -->
+    <section class="panel" id="p-leave">
+      <h2>회원 탈퇴</h2>
+      <p class="desc">탈퇴하면 계정 정보와 즐겨찾기가 삭제되며 되돌릴 수 없습니다.</p>
+      <div class="warn">작성한 글과 후기는 자동으로 삭제되지 않습니다. 필요하면 탈퇴 전에 직접 삭제해 주세요.</div>
+      <form name="leave" onsubmit="return goLeave()" novalidate>
+        <div class="field"><label for="l_pw">비밀번호 확인</label><input type="password" id="l_pw" name="t_pw" autocomplete="current-password"></div>
+        <label class="agree"><input type="checkbox" name="t_agree"> 위 내용을 확인했으며 탈퇴에 동의합니다.</label>
+        <p class="msg" id="msgLeave"></p>
+        <button type="submit" class="btn sm">회원 탈퇴</button>
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+<script>
+(function(){
+  var ids=['info','pw','fav','post','review','leave'];
+
+  // 왼쪽 메뉴 → 해당 패널만 표시 (주소의 #info, #pw ... 로 구분)
+  function show(){
+    var h=(location.hash||'#info').slice(1);
+    if(ids.indexOf(h)<0) h='info';
+    ids.forEach(function(k){
+      document.getElementById('p-'+k).classList.toggle('on',k===h);
+      document.querySelector('.lmenu a[href="#'+k+'"]').classList.toggle('on',k===h);
+    });
+  }
+  window.addEventListener('hashchange',show);
+  show();
+
+  // 즐겨찾기 해제 / 후기 삭제 (화면 확인용: 목록에서만 사라짐)
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-del]'); if(!b) return;
+    if(confirm(b.dataset.del+' 삭제하시겠습니까?')) b.closest('li').remove();
+  });
+
+  // 휴대폰 번호 자동 하이픈
+  var tel=document.getElementById('i_tel');
+  tel.addEventListener('input',function(){
+    var d=this.value.replace(/\D/g,'').slice(0,11);
+    this.value=d.length<8?d.replace(/(\d{3})(\d+)/,'$1-$2'):d.replace(/(\d{3})(\d{3,4})(\d+)/,'$1-$2-$3');
+  });
+
+  function say(id,text,bad){ var m=document.getElementById(id); m.textContent=text; m.className='msg'+(bad?' bad':''); }
+
+  window.goInfo=function(){
+    var f=document.info;
+    if(!/^[가-힣a-zA-Z]{2,20}$/.test(f.t_name.value)){ say('msgInfo','이름을 2자 이상 입력하세요.',1); f.t_name.focus(); return false; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.t_email.value)){ say('msgInfo','이메일 형식이 올바르지 않습니다.',1); f.t_email.focus(); return false; }
+    if(!/^010-\d{3,4}-\d{4}$/.test(f.t_tel.value)){ say('msgInfo','휴대폰 번호를 010-0000-0000 형식으로 입력하세요.',1); f.t_tel.focus(); return false; }
+    say('msgInfo','');
+    // f.method="post"; f.action="Member?t_gubun=update"; f.submit();
+    alert('정보 저장 (DB 연동 전 화면 확인용)');
+    return false;
+  };
+
+  window.goPw=function(){
+    var f=document.pw;
+    if(!f.t_pw_now.value){ say('msgPw','현재 비밀번호를 입력하세요.',1); f.t_pw_now.focus(); return false; }
+    if(!/^(?=.*[A-Za-z])(?=.*\d).{8,20}$/.test(f.t_pw_new.value)){ say('msgPw','새 비밀번호는 영문과 숫자를 포함해 8~20자로 입력하세요.',1); f.t_pw_new.focus(); return false; }
+    if(f.t_pw_new.value!==f.t_pw_new2.value){ say('msgPw','새 비밀번호가 일치하지 않습니다.',1); f.t_pw_new2.focus(); return false; }
+    say('msgPw','');
+    // f.method="post"; f.action="Member?t_gubun=pwUpdate"; f.submit();
+    alert('비밀번호 변경 (DB 연동 전 화면 확인용)');
+    return false;
+  };
+
+  window.goLeave=function(){
+    var f=document.leave;
+    if(!f.t_pw.value){ say('msgLeave','비밀번호를 입력하세요.',1); f.t_pw.focus(); return false; }
+    if(!f.t_agree.checked){ say('msgLeave','탈퇴 동의에 체크해 주세요.',1); return false; }
+    say('msgLeave','');
+    if(!confirm('정말 탈퇴하시겠습니까?')) return false;
+    // f.method="post"; f.action="Member?t_gubun=delete"; f.submit();
+    alert('회원 탈퇴 (DB 연동 전 화면 확인용)');
+    return false;
+  };
+})();
+</script>
+</body>
+</html>

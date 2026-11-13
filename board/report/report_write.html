@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 제보 작성</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link href="../css/sub_c.css" rel="stylesheet">
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9b517f1cfb5f226389af659b2884ba65&libraries=services"></script>
+<script src="../js/common.js"></script>
+<script>
+	var map, marker, geocoder, places;
+
+	window.onload = function(){
+		var box = document.getElementById("pickMap");
+		if(!(window.kakao && kakao.maps)){
+			box.innerHTML = "<p style='padding:20px;color:#666'>지도를 불러오지 못했습니다. JavaScript 키와 등록한 도메인을 확인하세요.</p>";
+			return;
+		}
+
+		// 내 위치를 못 가져올 때 처음 보이는 곳 (대전)
+		var def = new kakao.maps.LatLng(36.35, 127.38);
+		map = new kakao.maps.Map(box, {center: def, level: 12});
+		marker = new kakao.maps.Marker({map: map, position: def, draggable: true});   // 지도 가운데에 마커
+		geocoder = new kakao.maps.services.Geocoder();
+		places = new kakao.maps.services.Places();
+
+		// 지도를 클릭하면 마커가 그 위치로 이동
+		kakao.maps.event.addListener(map, "click", function(e){
+			setPos(e.latLng, false, true);
+		});
+		// 마커를 끌어다 놓으면 그 위치로
+		kakao.maps.event.addListener(marker, "dragend", function(){
+			setPos(marker.getPosition(), false, true);
+		});
+
+		// 처음 열릴 때: 내 위치로 지도와 마커 이동
+		if(navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(function(p){
+				map.setLevel(3);
+				setPos(new kakao.maps.LatLng(p.coords.latitude, p.coords.longitude), true, true);
+			}, function(){
+				// 위치를 못 가져오면 기본 위치 그대로 두고, 사용자가 직접 선택
+			});
+		}
+	}
+
+	// 위치 지정 : 마커 이동 + 좌표 저장 (moveMap=true면 지도도 이동, fillAddr=true면 주소 자동 입력)
+	function setPos(pos, moveMap, fillAddr){
+		marker.setPosition(pos);
+		if(moveMap) map.setCenter(pos);
+
+		report.t_lat.value = pos.getLat();
+		report.t_lng.value = pos.getLng();
+
+		if(fillAddr){
+			geocoder.coord2Address(pos.getLng(), pos.getLat(), function(result, status){
+				if(status === kakao.maps.services.Status.OK){
+					var a = result[0].road_address ? result[0].road_address : result[0].address;
+					report.t_addr.value = a.address_name;
+				}
+			});
+		}
+	}
+
+	// 주소 검색 : 입력한 주소(또는 장소 이름)로 지도와 마커 이동
+	function goAddr(){
+		var q = report.t_addr.value.trim();
+		if(q == ""){
+			alert("검색할 주소를 입력하세요.");
+			report.t_addr.focus();
+			return;
+		}
+		if(!geocoder){
+			alert("지도를 불러오지 못했습니다.");
+			return;
+		}
+
+		geocoder.addressSearch(q, function(result, status){
+			if(status === kakao.maps.services.Status.OK){
+				map.setLevel(3);
+				setPos(new kakao.maps.LatLng(result[0].y, result[0].x), true, false);
+			}else{
+				// 주소로 못 찾으면 장소 이름으로 한 번 더 검색 (예: 유성온천역)
+				places.keywordSearch(q, function(r, s){
+					if(s === kakao.maps.services.Status.OK){
+						map.setLevel(3);
+						setPos(new kakao.maps.LatLng(r[0].y, r[0].x), true, false);
+					}else{
+						alert("검색 결과가 없습니다. 주소를 다시 확인해 주세요.");
+					}
+				});
+			}
+		});
+	}
+
+	function goSave(){
+		if(isEmpty(report.t_name, "구역 이름을 입력하세요."))return;
+		if(report.t_type.value == ""){
+			alert("구분을 선택하세요.");
+			report.t_type.focus();
+			return;
+		}
+		if(report.t_lat.value == ""){
+			alert("흡연구역 위치를 선택하세요. (지도를 클릭하거나 주소를 검색하세요)");
+			return;
+		}
+		if(isEmpty(report.t_addr, "주소를 입력하세요."))return;
+		if(isEmpty(report.t_content, "설명을 입력하세요."))return;
+
+		// DB 연동할 때 아래 3줄 사용
+		// report.method = "post";
+		// report.action = "Report?t_gubun=save";
+		// report.submit();
+		alert("제보 등록 (DB 연동 전 화면 확인용)");
+	}
+</script>
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<div class="wrap">
+
+  <!-- ===== common_list 시작 ===== -->
+  <aside class="left">
+    <ul class="lmenu">
+      <li><a href="report_list.html" class="on">제보 게시판</a></li>
+      <li><a href="fix_list.html">수정 및 신고 게시판</a></li>
+      <li><a href="review_list.html">후기 게시판</a></li>
+      <li><a href="free_list.html">자유 게시판</a></li>
+    </ul>
+    <div class="adbox"><span>AD</span>광고</div>
+  </aside>
+  <!-- ===== common_list 끝 ===== -->
+
+  <!-- ===== 제보 작성 ===== -->
+  <main class="content">
+    <div class="head">
+      <h2>흡연구역 제보</h2>
+    </div>
+
+    <p class="guideBox">지도에 없는 흡연구역을 알려 주세요. 제보하신 내용은 관리자가 확인한 뒤 지도에 반영됩니다.</p>
+
+    <form name="report" enctype="multipart/form-data">
+      <input type="hidden" name="t_lat">
+      <input type="hidden" name="t_lng">
+
+      <table class="writeForm">
+        <colgroup>
+          <col width="15%">
+          <col width="45%">
+          <col width="15%">
+          <col width="25%">
+        </colgroup>
+        <tbody>
+          <tr>
+            <th>구역 이름</th>
+            <td colspan="3">
+            	<input type="text" name="t_name" class="inTitle" maxlength="50" placeholder="예) 유성온천역 3번 출구 앞">
+            </td>
+          </tr>
+          <tr>
+            <th>작성자</th>
+            <td>박진호</td>
+            <th>구분</th>
+            <td>
+              <select name="t_type" class="inSelect">
+                <option value="">선택</option>
+                <option value="실외">실외</option>
+                <option value="실내">실내</option>
+                <option value="부스">흡연부스</option>
+              </select>
+            </td>
+				<tr>
+				  <th>주소</th>
+				  <td colspan="3">
+				    <div class="addrRow">
+				      <input type="text" name="t_addr" class="inTitle" placeholder="주소 또는 장소 이름을 입력하고 검색하세요" onkeydown="if(event.keyCode==13){goAddr();return false;}">
+				      <a href="javascript:goAddr()" class="btnAddr">주소 검색</a>
+				    </div>
+				  </td>
+				</tr>
+				<tr>
+				  <th>위치</th>
+				  <td colspan="3">
+				    <div id="pickMap" class="pickMap"></div>
+				    <p class="pickInfo">내 위치로 이동합니다. 지도를 클릭하거나 마커를 끌어서 정확한 위치를 정하세요.</p>
+				  </td>
+				</tr>
+          <tr>
+            <th>설명</th>
+            <td colspan="3">
+            	<textarea name="t_content" class="inReview" placeholder="위치 설명, 운영시간, 시설(의자, 재떨이, 지붕 등)을 적어 주세요"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <th>사진</th>
+            <td colspan="3">
+              <input type="file" name="t_file" accept="image/*" multiple>
+              <span class="fileHint">이미지 파일만 올릴 수 있어요. (최대 3장)</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="writeBtns">
+        <a href="javascript:goSave()" class="btnSave">제보하기</a>
+        <a href="report_list.html" class="btnCancel">목록</a>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+</body>
+</html>

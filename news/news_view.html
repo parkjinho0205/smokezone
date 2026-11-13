@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link href="../css/sub_c.css" rel="stylesheet">
+<script>
+	function goDelete(){
+		if(confirm("정말 삭제 하시나요?")){
+			// DB 연동할 때 삭제 요청 처리
+			alert("삭제 (DB 연동 전 화면 확인용)");
+			location.href = "news_list.html";
+		}
+	}
+	function goUpdate(){
+		location.href = "news_update.html";
+	}
+</script>
+</head>
+<body>
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<div class="wrap">
+
+  <!-- ===== common_list 시작 ===== -->
+  <aside class="left">
+    <ul class="lmenu">
+      <li><a href="/My_박진호_smoke_zone/notice/notice_list.html">Notice</a></li>
+      <li><a href="/My_박진호_smoke_zone/news/news_list.html" class="on">News</a></li>
+    </ul>
+    <div class="adbox"><span>AD</span>광고</div>
+  </aside>
+  <!-- ===== common_list 끝 ===== -->
+
+  <!-- ===== 글 상세 ===== -->
+  <main class="content">
+    <div class="head">
+      <h2>News</h2>
+    </div>
+
+    <table class="writeForm">
+      <colgroup>
+        <col width="15%">
+        <col width="45%">
+        <col width="15%">
+        <col width="25%">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th>제목</th>
+          <td colspan="3">흡연구역 MAP 서비스 오픈 안내</td>
+        </tr>
+        <tr>
+          <th>작성자</th>
+          <td>관리자</td>
+          <th>작성일</th>
+          <td>2026-11-11 14:30</td>
+        </tr>
+        <tr>
+          <th>조회수</th>
+          <td colspan="3">171</td>
+        </tr>
+
+        <tr>
+          <th>내용</th>
+          <td colspan="3">
+            <div class="viewContent">안녕하세요. 흡연구역 MAP입니다.
+전국의 흡연구역을 지도에서 쉽게 찾고, 후기와 평점을 확인할 수 있는 서비스를 오픈했습니다.
+새로운 흡연구역은 제보 게시판에서 알려 주시면 확인 후 지도에 반영하겠습니다.
+감사합니다.
+			</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+<!-- 이전글 | 수정 삭제 목록 | 다음글 (한 줄) -->
+<div class="viewBar">
+  <div class="pnPrev">
+    <span class="pnLabel">이전글</span><a href="news_view.html" class="pnLink">News 샘플 글 제목 9</a>
+    <!-- 이전글이 없을 때: <span class="pnLabel">이전글</span><span class="pnNone">이전 글이 없습니다.</span> -->
+  </div>
+
+  <div class="writeBtns">
+    <a href="javascript:goUpdate()" class="btnSave">수정</a>
+    <a href="javascript:goDelete()" class="btnCancel">삭제</a>
+    <a href="news_list.html" class="btnCancel">목록</a>
+  </div>
+
+  <!-- 후 -->
+  <div class="pnNext">
+    <a href="news_view.html" class="pnLink">Notice 샘플 글 제목 11</a><span class="pnLabel">다음글</span>
+    <!-- 다음글이 없을 때: <span class="pnNone">다음 글이 없습니다.</span><span class="pnLabel">다음글</span> -->
+  </div>
+  </div>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+</body>
+</html>

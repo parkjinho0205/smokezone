@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 회원가입</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../css/member_c.css">
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<main class="center">
+  <section class="card wide">
+    <h2>회원가입</h2>
+    <form name="join" onsubmit="return goJoin()" novalidate>
+
+      <div class="field">
+        <label for="t_id">아이디</label>
+        <div class="row">
+          <input type="text" id="t_id" name="t_id" maxlength="12" autocomplete="username" placeholder="영문으로 시작, 영문/숫자 4~12자">
+          <button type="button" id="idCheck">중복확인</button>
+        </div>
+        <p class="msg" id="m_id"></p>
+      </div>
+
+      <div class="field">
+        <label for="t_pw">비밀번호</label>
+        <input type="password" id="t_pw" name="t_pw" maxlength="20" autocomplete="new-password" placeholder="영문+숫자 포함 8~20자">
+        <p class="msg" id="m_pw"></p>
+      </div>
+
+      <div class="field">
+        <label for="t_pw2">비밀번호 확인</label>
+        <input type="password" id="t_pw2" name="t_pw2" maxlength="20" autocomplete="new-password" placeholder="비밀번호 다시 입력">
+        <p class="msg" id="m_pw2"></p>
+      </div>
+
+      <div class="field">
+        <label for="t_name">이름</label>
+        <input type="text" id="t_name" name="t_name" maxlength="20" autocomplete="name" placeholder="이름 입력">
+        <p class="msg" id="m_name"></p>
+      </div>
+
+      <div class="field">
+        <label for="t_email">이메일</label>
+        <input type="email" id="t_email" name="t_email" autocomplete="email" placeholder="example@email.com">
+        <p class="msg" id="m_email"></p>
+      </div>
+
+      <div class="field">
+        <label for="t_tel">휴대폰 번호</label>
+        <input type="tel" id="t_tel" name="t_tel" maxlength="13" autocomplete="tel" placeholder="010-0000-0000">
+        <p class="msg" id="m_tel"></p>
+      </div>
+
+      <div class="terms">
+        <label class="all"><input type="checkbox" id="agAll"> 전체 동의</label>
+        <label><input type="checkbox" class="ag" name="t_ag1"> 이용약관 동의 <small>(필수)</small></label>
+        <label><input type="checkbox" class="ag" name="t_ag2"> 개인정보 수집·이용 동의 <small>(필수)</small></label>
+      </div>
+      <p class="msg" id="m_ag"></p>
+
+      <div class="btns">
+        <a href="home.html" class="btn line">취소</a>
+        <button type="submit" class="btn">가입하기</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+<script>
+(function(){
+  var f=document.join, idChecked=false;
+  var RE={
+    id:/^[a-zA-Z][a-zA-Z0-9]{3,11}$/,
+    pw:/^(?=.*[A-Za-z])(?=.*\d).{8,20}$/,
+    name:/^[가-힣a-zA-Z]{2,20}$/,
+    email:/^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    tel:/^010-\d{3,4}-\d{4}$/
+  };
+  function msg(key,text,state){
+    var m=document.getElementById('m_'+key);
+    m.textContent=text; m.className='msg'+(state?' '+state:'');
+  }
+  function checkPw2(){
+    if(!f.t_pw2.value){ msg('pw2',''); return false; }
+    var same=f.t_pw.value===f.t_pw2.value;
+    msg('pw2', same?'비밀번호가 일치합니다.':'비밀번호가 일치하지 않습니다.', same?'ok':'bad');
+    return same;
+  }
+
+  // 아이디: 값이 바뀌면 중복확인을 다시 해야 함
+  f.t_id.addEventListener('input',function(){ idChecked=false; msg('id',''); });
+  document.getElementById('idCheck').addEventListener('click',function(){
+    if(!RE.id.test(f.t_id.value)){ msg('id','영문으로 시작하는 영문/숫자 4~12자로 입력하세요.','bad'); f.t_id.focus(); return; }
+    // 실제 연동 시: 서버에 중복 여부를 물어보고 결과에 따라 idChecked 설정
+    idChecked=true; msg('id','사용 가능한 아이디입니다. (화면 확인용 임시 결과)','ok');
+  });
+
+  f.t_pw.addEventListener('input',function(){
+    msg('pw', this.value&&!RE.pw.test(this.value)?'영문과 숫자를 포함해 8~20자로 입력하세요.':'', 'bad');
+    checkPw2();
+  });
+  f.t_pw2.addEventListener('input',checkPw2);
+
+  // 휴대폰 번호 자동 하이픈
+  f.t_tel.addEventListener('input',function(){
+    var d=this.value.replace(/\D/g,'').slice(0,11);
+    this.value=d.length<8?d.replace(/(\d{3})(\d+)/,'$1-$2'):d.replace(/(\d{3})(\d{3,4})(\d+)/,'$1-$2-$3');
+  });
+
+  // 약관 전체 동의
+  var all=document.getElementById('agAll'), ags=document.querySelectorAll('.ag');
+  all.addEventListener('change',function(){ ags.forEach(function(c){c.checked=all.checked}); });
+  ags.forEach(function(c){ c.addEventListener('change',function(){
+    all.checked=[].every.call(ags,function(x){return x.checked});
+  }); });
+
+  window.goJoin=function(){
+    ['id','pw','pw2','name','email','tel','ag'].forEach(function(k){msg(k,'')});
+    var bad=null;
+    function fail(el,key,text){ msg(key,text,'bad'); if(!bad) bad=el; }
+
+    if(!RE.id.test(f.t_id.value)) fail(f.t_id,'id','영문으로 시작하는 영문/숫자 4~12자로 입력하세요.');
+    else if(!idChecked) fail(f.t_id,'id','아이디 중복확인을 해주세요.');
+    if(!RE.pw.test(f.t_pw.value)) fail(f.t_pw,'pw','영문과 숫자를 포함해 8~20자로 입력하세요.');
+    if(!f.t_pw2.value||f.t_pw.value!==f.t_pw2.value) fail(f.t_pw2,'pw2','비밀번호가 일치하지 않습니다.');
+    if(!RE.name.test(f.t_name.value)) fail(f.t_name,'name','이름을 2자 이상 입력하세요.');
+    if(!RE.email.test(f.t_email.value)) fail(f.t_email,'email','이메일 형식이 올바르지 않습니다.');
+    if(!RE.tel.test(f.t_tel.value)) fail(f.t_tel,'tel','휴대폰 번호를 010-0000-0000 형식으로 입력하세요.');
+    if(!f.t_ag1.checked||!f.t_ag2.checked) fail(f.t_ag1,'ag','필수 약관에 모두 동의해야 가입할 수 있습니다.');
+
+    if(bad){ bad.focus(); return false; }
+    // 화면 구현 단계: 실제 연동 시 아래 3줄 사용
+    // f.method="post"; f.action="Member?t_gubun=join"; f.submit();
+    alert('가입 요청 (DB 연동 전 화면 확인용)');
+    return false;
+  };
+})();
+</script>
+</body>
+</html>

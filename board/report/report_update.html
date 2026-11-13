@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>흡연구역 MAP - 제보 수정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link href="../css/sub_c.css" rel="stylesheet">
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=9b517f1cfb5f226389af659b2884ba65&libraries=services"></script>
+<script src="../js/common.js"></script>
+<script>
+	var map, marker, geocoder, places;
+
+	window.onload = function(){
+		var box = document.getElementById("pickMap");
+		if(!(window.kakao && kakao.maps)){
+			box.innerHTML = "<p style='padding:20px;color:#666'>지도를 불러오지 못했습니다. JavaScript 키와 등록한 도메인을 확인하세요.</p>";
+			return;
+		}
+
+		// 처음에는 제보했던 위치에 지도와 마커를 표시
+		var pos = new kakao.maps.LatLng(report.t_lat.value, report.t_lng.value);
+		map = new kakao.maps.Map(box, {center: pos, level: 3});
+		marker = new kakao.maps.Marker({map: map, position: pos, draggable: true});
+		geocoder = new kakao.maps.services.Geocoder();
+		places = new kakao.maps.services.Places();
+
+		// 지도를 클릭하면 마커가 그 위치로 이동
+		kakao.maps.event.addListener(map, "click", function(e){
+			setPos(e.latLng, false, true);
+		});
+		// 마커를 끌어다 놓으면 그 위치로
+		kakao.maps.event.addListener(marker, "dragend", function(){
+			setPos(marker.getPosition(), false, true);
+		});
+	}
+
+	// 위치 지정 : 마커 이동 + 좌표 저장 (moveMap=true면 지도도 이동, fillAddr=true면 주소 자동 입력)
+	function setPos(pos, moveMap, fillAddr){
+		marker.setPosition(pos);
+		if(moveMap) map.setCenter(pos);
+
+		report.t_lat.value = pos.getLat();
+		report.t_lng.value = pos.getLng();
+
+		if(fillAddr){
+			geocoder.coord2Address(pos.getLng(), pos.getLat(), function(result, status){
+				if(status === kakao.maps.services.Status.OK){
+					var a = result[0].road_address ? result[0].road_address : result[0].address;
+					report.t_addr.value = a.address_name;
+				}
+			});
+		}
+	}
+
+	// 주소 검색 : 입력한 주소(또는 장소 이름)로 지도와 마커 이동
+	function goAddr(){
+		var q = report.t_addr.value.trim();
+		if(q == ""){
+			alert("검색할 주소를 입력하세요.");
+			report.t_addr.focus();
+			return;
+		}
+		if(!geocoder){
+			alert("지도를 불러오지 못했습니다.");
+			return;
+		}
+
+		geocoder.addressSearch(q, function(result, status){
+			if(status === kakao.maps.services.Status.OK){
+				map.setLevel(3);
+				setPos(new kakao.maps.LatLng(result[0].y, result[0].x), true, false);
+			}else{
+				// 주소로 못 찾으면 장소 이름으로 한 번 더 검색 (예: 유성온천역)
+				places.keywordSearch(q, function(r, s){
+					if(s === kakao.maps.services.Status.OK){
+						map.setLevel(3);
+						setPos(new kakao.maps.LatLng(r[0].y, r[0].x), true, false);
+					}else{
+						alert("검색 결과가 없습니다. 주소를 다시 확인해 주세요.");
+					}
+				});
+			}
+		});
+	}
+
+	function goUpdate(){
+		if(isEmpty(report.t_name, "구역 이름을 입력하세요."))return;
+		if(report.t_type.value == ""){
+			alert("구분을 선택하세요.");
+			report.t_type.focus();
+			return;
+		}
+		if(isEmpty(report.t_addr, "주소를 입력하세요."))return;
+		if(isEmpty(report.t_content, "설명을 입력하세요."))return;
+
+		// 사진은 기존 사진(삭제 체크 안 한 것) + 새로 올리는 사진이 합쳐서 3장까지
+		var dels = document.getElementsByName("t_photo_del");
+		var keep = dels.length;
+		for(var i = 0; i < dels.length; i++){
+			if(dels[i].checked) keep--;
+		}
+		var add = report.t_file.files.length;
+		if(keep + add > 3){
+			alert("사진은 최대 3장까지 올릴 수 있습니다. (남는 기존 사진 " + keep + "장 + 새 사진 " + add + "장)");
+			return;
+		}
+
+		// DB 연동할 때 아래 3줄 사용
+		// report.method = "post";
+		// report.action = "Report?t_gubun=update";
+		// report.submit();
+		alert("제보 수정 (DB 연동 전 화면 확인용)");
+	}
+</script>
+</head>
+<body>
+
+<!-- ===== common_header (common_header.jsp 로 분리) ===== -->
+<script src="../js/include.js"></script>
+	<div data-include="../common_header.html"></div>
+<!-- 여기까지 header -->
+
+<div class="wrap">
+
+  <!-- ===== common_list 시작 ===== -->
+  <aside class="left">
+    <ul class="lmenu">
+      <li><a href="report_list.html" class="on">제보 게시판</a></li>
+      <li><a href="fix_list.html">수정 및 신고 게시판</a></li>
+      <li><a href="review_list.html">후기 게시판</a></li>
+      <li><a href="free_list.html">자유 게시판</a></li>
+    </ul>
+    <div class="adbox"><span>AD</span>광고</div>
+  </aside>
+  <!-- ===== common_list 끝 ===== -->
+
+  <!-- ===== 제보 수정 ===== -->
+  <main class="content">
+    <div class="head">
+      <h2>제보 수정</h2>
+    </div>
+
+    <p class="guideBox">관리자가 확인하기 전(대기 상태)에만 수정할 수 있습니다.</p>
+
+    <form name="report" enctype="multipart/form-data">
+      <input type="hidden" name="t_no" value="9">
+      <input type="hidden" name="t_lat" value="36.7898">
+      <input type="hidden" name="t_lng" value="127.0020">
+
+      <table class="writeForm">
+        <colgroup>
+          <col width="15%">
+          <col width="45%">
+          <col width="15%">
+          <col width="25%">
+        </colgroup>
+        <tbody>
+          <tr>
+            <th>구역 이름</th>
+            <td colspan="3"><input type="text" name="t_name" class="inTitle" maxlength="50" value="아산터미널 후문 흡연구역"></td>
+          </tr>
+          <tr>
+            <th>작성자</th>
+            <td>박진호</td>
+            <th>구분</th>
+            <td>
+              <select name="t_type" class="inSelect">
+                <option value="">선택</option>
+                <option value="실외" selected>실외</option>
+                <option value="실내">실내</option>
+                <option value="부스">흡연부스</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>주소</th>
+            <td colspan="3">
+              <div class="addrRow">
+                <input type="text" name="t_addr" class="inTitle" value="충청남도 아산시 (샘플 주소)" onkeydown="if(event.keyCode==13){goAddr();return false;}">
+                <a href="javascript:goAddr()" class="btnAddr">주소 검색</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th>위치</th>
+            <td colspan="3">
+              <div id="pickMap" class="pickMap"></div>
+              <p class="pickInfo">지도를 클릭하거나 마커를 끌어서, 주소를 검색해서 위치를 바꿀 수 있습니다.</p>
+            </td>
+          </tr>
+          <tr>
+            <th>설명</th>
+            <td colspan="3"><textarea name="t_content" class="inReview">아산터미널 후문 쪽 주차장 옆에 있는 흡연구역입니다.
+지붕이 있고 재떨이가 두 개 놓여 있어요. 밤에는 조금 어둡습니다.</textarea></td>
+          </tr>
+
+          <!-- 사진이 있는 제보: 기존 사진 삭제 + 새 사진 추가 -->
+          <tr>
+            <th rowspan="2">사진</th>
+            <td colspan="3">
+              <div class="photoEditRow">
+                <div class="photoEdit">
+                  <div class="ph">사진 1</div>
+                  <label class="fileDel"><input type="checkbox" name="t_photo_del" value="P001">삭제</label>
+                </div>
+                <div class="photoEdit">
+                  <div class="ph">사진 2</div>
+                  <label class="fileDel"><input type="checkbox" name="t_photo_del" value="P002">삭제</label>
+                </div>
+                <div class="photoEdit">
+                  <div class="ph">사진 3</div>
+                  <label class="fileDel"><input type="checkbox" name="t_photo_del" value="P003">삭제</label>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <input type="file" name="t_file" accept="image/*" multiple>
+              <span class="fileHint">사진은 기존 사진을 포함해 최대 3장까지 올릴 수 있어요. 삭제할 사진은 체크하세요.</span>
+            </td>
+          </tr>
+
+          <!-- 사진이 없는 제보는 위 tr 2개 대신 아래 tr 사용
+          <tr>
+            <th>사진</th>
+            <td colspan="3">
+              <input type="file" name="t_file" accept="image/*" multiple>
+              <span class="fileHint">이미지 파일만 올릴 수 있어요. (최대 3장)</span>
+            </td>
+          </tr>
+          -->
+        </tbody>
+      </table>
+
+      <div class="writeBtns">
+        <a href="javascript:goUpdate()" class="btnSave">수정</a>
+        <a href="report_view.html" class="btnCancel">취소</a>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- ===== common_footer (common_footer.jsp 로 분리) ===== -->
+<footer class="foot">
+  <div data-include="../common_footer.html"></div>
+</footer>
+
+</body>
+</html>
